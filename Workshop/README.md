@@ -13,17 +13,17 @@
 <span id="#initial_setup" >
 1.  Initial Setup: <a name="initial_setup"></a>
 
-    To create a next project, we only need to create a folder and init a npm project:
+  To create a next project, we only need to create a folder and init a npm project:
 
         mkdir Workshop
         cd Workshop
         npm init
 
-    Install NextJS packages and dependencies:
+  Install NextJS packages and dependencies:
 
         npm install --save next react react-dom
 
-    Add the following scripts in your package.json:
+  Add the following scripts in your package.json:
 
         "scripts": {
             "dev": "next",
@@ -31,13 +31,14 @@
             "start": "next start"
         }
 
-    Let's test if everything is working, create a folder called `pages`:
+  Let's test if everything is working, create a folder called `pages`:
 
         mkdir pages
 
-    Create a javascript file (the name of the file will be taken by NextJS as the route where the page will be set) and create a react component:
+  Create a javascript file (the name of the file will be taken by NextJS as the route where the page will be set)
+  and create a react component:
 
-    `hello.js`
+  `hello.js`
 
         function Hello() {
             return <p>Hello NextJS!</p>;
@@ -45,21 +46,21 @@
 
         export default Hello;
 
-    Let's run the dev server:
+  Let's run the dev server:
 
         npm run dev
 
-    In the address `http://localhost:3000/hello` we should watch our first page in NextJS.
+  In the address `http://localhost:3000/hello` we should watch our first page in NextJS.
 
-    Let's create a component and import it in our page.
+  Let's create a component and import it in our page.
 
-    Create a folder called `components` and inside another one called `cta`:
+  Create a folder called `components` and inside another one called `cta`:
 
         mkdir components
 
         mkdir cta
 
-    Create a file called `cta.js`:
+  Create a file called `cta.js`:
 
         class Cta extends React.Component {
           render() {
@@ -67,7 +68,7 @@
           }
         }
 
-    Let's import it in our `hello` page.
+  Let's import it in our `hello` page.
 
         import Cta from '../components/cta/cta'
 
@@ -77,20 +78,25 @@
 
         export default Hello;
 
-    So far we are good, but let's improve our code:
+  So far we are good, but let's improve our code:
 
-    1. If our project scales, there will be a moment when the relative imports will be like the following `../../../../package.js` and will be difficult to track or modify something, that's why we will start configuring the absolute import:
+### 1. Config File
+  If our project scales, there will be a moment when the relative imports will be like the following
+  `../../../../package.js` and will be difficult to track or modify something, that's why we will start
+  configuring the absolute import:
 
-    In NextJS there is a config file that we need to create `next.config.js` which allows us to have a custom configuration. In this file we can change how long will last the caching, how will be called our `dist` folder, set additional webpack configuration and so on. Let's customize our webpack in order to have absolute import:
+  In NextJS there is a config file that we need to create `next.config.js` which allows us to have a custom
+  configuration. In this file we can change how long will last the caching, how will be called our `dist` folder,
+  set additional webpack configuration and so on. Let's customize our webpack in order to have absolute import:
 
-    First create `next.config.js` in the root directory of our project:
+  First create `next.config.js` in the root directory of our project:
 
     `next.config.js`
     module.exports = {}
 
-    When we are working with webpack without next, that is, we install webpack our selves and create a `webpack.config.js`, to have a absolute import you must set the following:
+  When we are working with webpack without NextJS, that is, we install webpack ourselves and create a `webpack.config.js`, to have a absolute import you must set the following:
 
-    `webpack.config.js`
+  `webpack.config.js`
 
         resolve: {
           modules: [
@@ -98,9 +104,9 @@
           ]
         }
 
-    In NextJS, the json exported in `next.config.js` can have a field called webpack:
+  In NextJS, the json exported in `next.config.js` can have a field called webpack:
 
-    `next.config.js`
+  `next.config.js`
 
         module.exports = {
           webpack: (config, options) => {
@@ -109,9 +115,9 @@
           }
         }
 
-    So, what we are going to to is to set the config in the following way:
+  So, what we are going to do is to set the config in the following way:
 
-    `next.config.js`
+  `next.config.js`
 
         const path = require('path')
 
@@ -122,41 +128,43 @@
           }
         }
 
-    Setting that, we can know modify the import we had on `pages/hello.js`
+  Setting that, we can now modify the import we had on `pages/hello.js`
 
         import Cta from 'components/cta/cta'
 
-    Perfect, now you are much closer to be a pro coder.
+  Perfect, now you are much closer to be a pro coder.
 
-    2. Linters! How did you bear a code without linters? Let's install eslint to help us to set a standard linter configuration:
+  ### 2. Linters!
+  How did you bear a code without linters? Let's install eslint to help us to set a standard linter configuration...
 
-    Run in the terminal:
+  Run in the terminal:
 
         npm install -g eslint
 
         eslint --init
 
-    Select:
+  Select:
 
     1. ❯ To check syntax, find problems, and enforce code style
     2. ❯ JavaScript modules (import/export)
     3. ❯ Vue.js ... kidding ❯ React
-    4. Does your project use TypeScript? > Obviously not!
-    5. Browser
+    4. Does your project use TypeScript? ❯ Obviously not!
+    5. ❯ Browser
     6. ❯ Use a popular style guide
     7. ❯ Airbnb (https://github.com/airbnb/javascript)
     8. ❯ JavaScript
+    9. ❯ (missing dependencies) ... install them with npm? ❯ Y
 
-    We will end with a `.eslintrc.js` file in our root path.
+  We will end with a `.eslintrc.js` file in our root path.
 
-    If we have in vscode the eslint extension you will notice that the IDE will warning us with every lint error.
+  If we have in vscode the eslint extension you will notice that the IDE will be warning us with every lint error.
 
-    There are some additions we should include in our `.eslintrc.js` config, because we dont want to deal with them:
+  There are some additions we should include in our `.eslintrc.js` config, because we dont want to deal with them:
 
-    - 'React' must be in scope when using JSXeslint(react/react-in-jsx-scope)
-    - JSX not allowed in files with extension '.js'eslint(react/jsx-filename-extension)
+  - 'React' must be in scope when using JSXeslint(react/react-in-jsx-scope)
+  - JSX not allowed in files with extension '.js'eslint(react/jsx-filename-extension)
 
-    So, let's add to the file the following rules:
+  So, let's add to the file the following rules:
 
         "rules": {
           "react/react-in-jsx-scope": "off",
@@ -164,46 +172,46 @@
           "react/prop-types": [0]
         }
 
-    But, we will still have to set some settings to avoid warnings about absolute import and other react features, first install `babel-eslint`:
+  But, we will still have to set some settings to avoid warnings about absolute import and other react features, first install `babel-eslint`:
 
         npm install eslint@4.x babel-eslint@8 --save-dev
 
-    Then add this to the `.eslintrc.js` file:
+  Then add this to the `.eslintrc.js` file:
 
-        settings: {
+        "settings": {
           "import/resolver": {
-            node: {
-              paths: ["./"]
+            "node": {
+              "paths": ["./"]
             }
           },
-          react: {
-            pragma: "React",
-            version: "16.9.0"
+          "react": {
+            "pragma": "React",
+            "version": "16.9.0"
           }
         },
-        parser: "babel-eslint",
+        "parser": "babel-eslint",
 
-    Almost ready, add in the globals:
+  Almost ready, add in the globals the React field, like this:
 
-        globals: {
-          Atomics: 'readonly',
-          SharedArrayBuffer: 'readonly',
-          React: 'writable',
+        "globals": {
+          "Atomics": 'readonly',
+          "SharedArrayBuffer": 'readonly',
+          "React": 'writable',
         }
 
-    To avoid that eslint warns us about having React without importing, actually NextJS is importing it in background.
+  To avoid that eslint warns us about having React without importing, actually NextJS is importing it in background.
 
-    If we run:
+  If we run:
 
         eslint .
 
-    We will see only warnings of our lack of seniority.
+  We will see only warnings of our lack of seniority.
 
 
 <span id="#css" >
 2.  CSS and SCSS configuration: <a name="css"></a>
 
-    Well, first, NextJS in its documentation shows a Built-in CSS support, which uses `styled-jsx` to isolated scoped CSS. This is the example provided by them:
+  Well, first, NextJS in its documentation shows a Built-in CSS support, which uses `styled-jsx` to isolated scoped CSS. This is the example provided by them:
 
         function HelloWorld() {
           return (
@@ -234,20 +242,20 @@
 
         export default HelloWorld;
 
-    Well, in this tutorial we are not going to use this, because I dont like it :P
+  In this tutorial we are not going to use this, because I don't like it :P
 
-    We will be using scss files, and for that we need a dependency: `next-sass`
+  We will be using scss files, and for that we need a dependency: `next-sass`
 
-    We can find the package in the following link:
-    https://github.com/zeit/next-plugins/tree/master/packages/next-sass
+  We can find the package in the following link:
+  https://github.com/zeit/next-plugins/tree/master/packages/next-sass
 
-    Its installation is really easy:
+  Its installation is really easy:
 
         npm install --save @zeit/next-sass node-sass
 
-    To use it we only need to wrap the exported json of `next.config.js`:
+  To use it we only need to wrap the exported json of `next.config.js`:
 
-    `next.config.js`
+  `next.config.js`
 
         const withSass = require('@zeit/next-sass')
 
@@ -255,11 +263,11 @@
           /* config options here */
         })
 
-    That is enough to style our cta:
+  That is enough to style our cta:
 
-    Create in `components/cta/` a file `cta.scss`:
+  Create in `components/cta/` a file `cta.scss`:
 
-    `components/cta/cta.scss`
+  `components/cta/cta.scss`
 
         .superCta {
           background-color: white;
@@ -267,7 +275,7 @@
           border: 1px solid;
         }
 
-    `components/cta/cta.js`
+  `components/cta/cta.js`
 
         import './cta.scss';
 
@@ -279,17 +287,16 @@
 
         export default Cta;
 
-    Cool, now we can use scss. What if we use the cool CSS Modules?
+  Cool, now we can use scss. What if we use the cool CSS Modules?
 
-    Change `next.config.js`
-
-        const withSass = require('@zeit/next-sass')
+  Add field cssModules in `next.config.js`
 
         module.exports = withSass({
+          ...,
           cssModules: true
         })
 
-    And change `components/cta/cta.js` for:
+  And change `components/cta/cta.js` for:
 
         import css from './cta.scss';
 
@@ -301,26 +308,27 @@
 
         export default Cta;
 
-    `css` is a map, with the name of the class is scss and the hash name generated for CSS modules.
-    Example
+  `css` is a map, with the name of the class is scss and the hash name generated for CSS modules. Example:
 
         {
           superCta: "oz3A60u9ZTGJI-7A1n1go"
         }
 
-    In the browser we have:
+  In the browser we have:
 
         <button class="oz3A60u9ZTGJI-7A1n1go">Click me</button>
 
-    There is a problem we haven't tackle, what if we want global styles, like resets, colors, media queries?
+  There is a problem we haven't tackle, what if we want global styles, like resets, colors, media queries?
 
-    We need to install a new dependency `sass-resources-loader`
+  We need to install a new dependency `sass-resources-loader`
 
         npm install sass-resources-loader
 
-    And again, let's modify:
+  And again, let's add more rules to our `next.config.js`:
 
         webpack: (config) => {
+            ...;
+
             config.module.rules.push({
               enforce: 'pre',
               test: /.scss$/,
@@ -329,36 +337,48 @@
                 resources: ['./styles/globals.scss'],
               },
             });
+
+            return config;
         }
 
-    Basically we are adding a rule, where it will look in a folder called `styles` (that we are going to create in the root folder) and it will look for a file called `globals.scss` (set the name you want, it could be `main.scss`)
+  Basically we are adding a rule, where it will look in a folder called `styles` (that we are going to create in the
+  root folder) and it will look for a file called `globals.scss` (set the name you want, it could be `main.scss`)
 
-    There in `styles/globals.scss` you can import any file you want to have as a global resource in every page:
+  There in `styles/globals.scss` you can import any file you want to have as a global resource in every page:
 
-    For example, import a reset.scss:
+  For example, import a reset.scss:
 
         @import './reset.scss';
+  
+  Of course `reset.scss` have to exist, and it could be:
+
+```scss
+        * {
+          margin: 0;
+          padding: 0;
+        }
+```
 
 <span id="#routing" >
 3.  Routing:
 
-    Well to make this more entertainment let's create an app with purpose.
+  To make this more entertaining, let's create an app with purpose.
 
-    Let's create the Tour of Heroes of our enemy!
+  Let's create the Tour of Heroes of our enemy!
 
-    https://moynokylxexp.angular.stackblitz.io/dashboard
+  https://moynokylxexp.angular.stackblitz.io/dashboard
 
-    So, we have to create three pages:
+  So, we have to create three pages:
 
-    /dashboard
-    /heroes
-    /detail/:id
+  /dashboard
+  /heroes
+  /detail/:id
 
-    We will let the third one for the step of dynamic routing
+  We will let the third one for the step of dynamic routing
 
-    Create two js files in the folder `pages`: `dashboard.js` and `heroes.js`
+  Create two js files in the folder `pages`: `dashboard.js` and `heroes.js`
 
-    `pages/dashboard.js`
+  `pages/dashboard.js`
 
         function Dashboard() {
           return <div>
@@ -371,7 +391,7 @@
 
         export default Dashboard;
 
-    `pages/heroes.js`
+  `pages/heroes.js`
 
         function Heroes() {
           return <div>
@@ -384,17 +404,18 @@
 
         export default Heroes;
 
-    Check the routing visiting:
+  Check the routing visiting:
 
-    http://localhost:3000/dashboard
+  http://localhost:3000/dashboard
 
-    http://localhost:3000/heroes
+  http://localhost:3000/heroes
 
-    Well, now, how can we go from one page to another?
+  Well, now, how can we go from one page to another?
 
-    Let's modify our Cta component to have the Link component of NextJS:
+  Let's modify our Cta component to have the Link component of NextJS:
 
-    `components/cta/cta.js`
+  `components/cta/cta.js`
+
     import Link from "next/link";
     import css from "./cta.scss";
 
@@ -414,11 +435,11 @@
 
         export default Cta;
 
-    We add Link from "next/link" which allows as to having a kind of SPA routing in a SSR app.
+  We add Link from "next/link" which allows as to having a kind of SPA routing in a SSR app.
 
-    Let's modify our pages:
+  Let's modify our pages:
 
-    `pages/dashboard.js`
+  `pages/dashboard.js`
 
         import Cta from 'components/cta/cta';
 
@@ -433,7 +454,7 @@
 
         export default Dashboard;
 
-    `pages/heroes.js`
+  `pages/heroes.js`
 
         import Cta from 'components/cta/cta';
 
@@ -449,7 +470,7 @@
 
         export default Heroes;
 
-    Our Cta looks ugly, I will add some styles to it.
+  Our Cta looks ugly, I will add some styles to it.
 
         .superCta {
           display: inline-block;
@@ -467,16 +488,16 @@
 <span id="#static" >
 4.  Static files:
 
-    Handling static files is easy, you must create only one folder -> `static`, there you put any assets you want.
+  Handling static files is easy, you must create only one folder -> `static`, there you put any assets you want.
 
-    Let's download an image:
+  Let's download an image:
     https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/React.svg/1200px-React.svg.png
 
-    And put in `./static/images/react.png`
+  And put in `./static/images/react.png`
 
-    Remember our `hello` page?
+  Remember our `hello` page?
 
-    `pages/hello.js`
+  `pages/hello.js`
 
         function Hello() {
           return <div>
@@ -487,13 +508,13 @@
 
         export default Hello;
 
-    There is also another way to handle static files and is importing then, and using libraries to load them:
+  There is also another way to handle static files and is importing then, and using libraries to load them:
 
-    SVGs:
+  SVGs:
 
-    Dependencies everywhere: Let's install `svg-react-loader`
+  Dependencies everywhere: Let's install `svg-react-loader`
 
-    Again we have to modify our webpack config, adding the following rule:
+  Again we have to modify our webpack config, adding the following rule:
 
         config.module.rules.push(
           {
@@ -503,13 +524,13 @@
           },
         );
 
-    Go to material icons: https://material.io/resources/icons/?style=baseline
+  Go to material icons: https://material.io/resources/icons/?style=baseline
 
-    And search for `search`, save the icon <img src='./static/icons/search.svg'> in the folder `/static/icons/`.
+  And search for `search`, save the icon <img src='./static/icons/search.svg'> in the folder `/static/icons/`.
 
-    Now, let's load it. But first, let's create another component, a search bar:
+  Now, let's load it. But first, let's create another component, a search bar:
 
-    `components/searchBar.js`
+  `components/searchBar.js`
 
         import css from "./searchBar.scss";
 
@@ -524,11 +545,11 @@
 
         export default SearchBar;
 
-    Now let's add the svg:
+  Now let's add the svg:
 
         import SearchIcon from 'static/icons/search.svg';
 
-    And ...
+  And ...
 
         function SearchBar(props) {
           const { placeholder } = props;
@@ -541,10 +562,11 @@
 
         export default SearchBar;
 
-    It would be better to wrap SearchIcon in a component maybe called `SvgIcon` and load dynamically the svg based on a prop. That will be done creating:
+  It would be better to wrap SearchIcon in a component maybe called `SvgIcon` and load dynamically the svg based on a prop.
+  That will be done creating:
 
 
-    `components/svgIcon.js`
+  `components/svgIcon.js`
 
         function SvgIcon(props) {
           const { iconName } = props;
@@ -554,7 +576,7 @@
 
         export default SvgIcon;
 
-    `components/searchBar/searchBar.js`
+  `components/searchBar/searchBar.js`
 
         import SvgIcon from "components/svgIcon/svgIcon";
         import css from "./searchBar.scss";
@@ -574,9 +596,9 @@
 
         export default SearchBar;
 
-    I will add some styles to the searchBar:
+  I will add some styles to the searchBar:
 
-    `components/searchBar/searchBar.scss`
+  `components/searchBar/searchBar.scss`
 
         .searchBar {
           position: relative;
@@ -603,7 +625,7 @@
           padding-left: 30px;
         }
 
-    And dashboard should be:
+  And dashboard should be:
 
     `pages/dashboad.js`
 
@@ -621,7 +643,7 @@
 
         export default Dashboard;
 
-    Well, in order to have heroes, for now we will mock them:
+  Well, in order to have heroes, for now we will mock them:
 
     `static/mocks/heroes.json`
 
@@ -637,16 +659,16 @@
           'William Gomez',
         ]
 
-    Now, we know that the heroes will be on the route `localhost:3000/static/mocks/heroes.json`, obviously we can import them, but there is more fun if we fetch them, I will use the love of my live which is called axios, let's install it:
+  Now, we know that the heroes will be on the route `localhost:3000/static/mocks/heroes.json`, obviously we can import them,
+  but there is more fun if we fetch them, I will use the love of my live which is called axios, let's install it:
 
         npm install axios
 
-    Now, let's use a functionality of NextJS that allow us to get an initial status of the page:
-    `getInitialProps`
+  Now, let's use a functionality of NextJS that allow us to get an initial status of the page: `getInitialProps`
 
-    Our dashboard will look like:
+  Our dashboard will look like:
 
-    `pages/dashboad.js`
+  `pages/dashboad.js`
 
         import Cta from "components/cta/cta";
         import SearchBar from "components/searchBar/searchBar";
@@ -677,9 +699,9 @@
 
         export default Dashboard;
 
-    For now, our search bar does not work, let's wait to redux part to make it work.
+  For now, our search bar does not work, let's wait to redux part to make it work.
 
-    But let's create better a List component in order to have routing to the profile page of each hero.
+  But let's create better a List component in order to have routing to the profile page of each hero.
 
     `components/list/list.js`
 
@@ -705,10 +727,10 @@
 
         export default List;
 
-    As you can see we use our component Cta, so we can go to the profile of each Hero, to do that we need dynamic routing.
+  As you can see we use our component Cta, so we can go to the profile of each Hero, to do that we need dynamic routing.
 
 <span id="#dynamic" >
-6. Dynamic routing:
+5. Dynamic routing:
 
     Let's create a folder inside `pages` called `heroes` and create a js file called `[hero].js`
 
@@ -724,16 +746,18 @@
 
         export default Hero;
 
-    Note that we use a module of NextJS called useRouter, with this we can get an instance of the router and get the query parameters in the url, in this case the query parameter is what follows after `heroes/` and Next looks if there is a js file in the folder `heroes` with parameters in its name (`[hero].js`, that is how `hero` becomes an argument int he query)
+  Note that we use a module of NextJS called useRouter, with this we can get an instance of the router and get the query
+  parameters in the url, in this case the query parameter is what follows after `heroes/` and Next looks if there is a
+  js file in the folder `heroes` with parameters in its name (`[hero].js`, that is how `hero` becomes an argument int he query)
 
 <span id="#redux" >
 6. Redux:
 
-    I want to present you an example of how using redux and connect the components, to be honest this app is pretty simple to use Redux but this is for academic purposes.
+  I want to present you an example of how using redux and connect the components, to be honest this app is pretty simple to use Redux but this is for academic purposes.
 
-    Before starting let's do it in the simple way, lets send a callback from the `dashboard` page to the `searchBar` in that way the can alter heroes array using the onChange of the `searchBar`
+  Before starting let's do it in the simple way, lets send a callback from the `dashboard` page to the `searchBar` in that way the can alter heroes array using the onChange of the `searchBar`
 
-    `components/searchBar/searchBar.js`
+  `components/searchBar/searchBar.js`
 
         import SvgIcon from "components/svgIcon/svgIcon";
         import css from "./searchBar.scss";
@@ -758,9 +782,10 @@
 
         export default SearchBar;
 
-    Note that now SearchBar has a new prop, which is called filterUsingValue and this is just a function of the `dashboard.js` file that is sent as prop. Now we can execute that function a pass to is a value, the value of the input.
+  Note that now SearchBar has a new prop, which is called filterUsingValue and this is just a function of the `dashboard.js`
+  file that is sent as prop. Now we can execute that function a pass to is a value, the value of the input.
 
-    `pages/dashboard.js`
+  `pages/dashboard.js`
 
         import Cta from "components/cta/cta";
         import SearchBar from "components/searchBar/searchBar";
@@ -811,15 +836,17 @@
 
         export default Dashboard;
 
-    Note that we convert the page component into a `React.component` in order to use the state of the component and mutate it using `this.setState` with the function `filterHeroes`, note that this function is the one that is sent to the `searchBar`, so the search is in charge of call this function setting the value of the input.
+  Note that we convert the page component into a `React.component` in order to use the state of the component and mutate it
+  using `this.setState` with the function `filterHeroes`, note that this function is the one that is sent to the `searchBar`,
+  so the search is in charge of call this function setting the value of the input.
 
 
-    Now lets try the same but using Redux.
+  Now lets try the same but using Redux.
 
-    To use Redux, we need to do some tricky stuffs, sorry but everything has its cost.
+  To use Redux, we need to do some tricky stuffs, sorry but everything has its cost.
 
 
-    The first thing we need to understand is that next does not render a React App but miracle, it has by default a file called _app.js where the app is written, we can overload that document creating a file inside `pages` called `_app.js`
+  The first thing we need to understand is that next does not render a React App but miracle, it has by default a file called _app.js where the app is written, we can overload that document creating a file inside `pages` called `_app.js`
 
     `pages/_app.js`
 
@@ -835,13 +862,14 @@
 
         export default MyApp
 
-    This is the most basic App component, but we can start to make everything crazy.
+  This is the most basic App component, but we can start to make everything crazy.
 
-    Install the dependencies:
+  Install the dependencies:
 
     npm install redux react-redux next-redux-wrapper --save
 
-    Let's first create a folder called `store`, in this folder we will set two folders `actions` and `reducers`, in `actions` we will create the regular Redux actions types and actions:
+  Let's first create a folder called `store`, in this folder we will set two folders `actions` and `reducers`,
+  in `actions` we will create the regular Redux actions types and actions:
 
     `store/actions/action-types.js`
 
@@ -857,7 +885,7 @@
           return { type: CHANGE_SEARCH, payload };
         }
 
-    In `reducers` we will create a Redux reducer to change the state:
+  In `reducers` we will create a Redux reducer to change the state:
 
     `store/reducers/searchReducer.js`
 
@@ -879,7 +907,7 @@
 
         export default searchReducer;
 
-    Finally, we will create the store in `store/index.js`
+  Finally, we will create the store in `store/index.js`
 
         import { createStore } from 'redux';
 
@@ -893,12 +921,12 @@
 
         export default makeStore;
 
-    Note that makeStore must be a function, because the wrapper we will use it require to create the store in this way.
+  Note that makeStore must be a function, because the wrapper we will use it require to create the store in this way.
 
-    Now, we have Redux as we would configure it in Create-React-App.
-    Let's modify `_app.js` in order to import the store and set the Provider.
+  Now, we have Redux as we would configure it in Create-React-App.
+  Let's modify `_app.js` in order to import the store and set the Provider.
 
-    `pages/_app.js`
+  `pages/_app.js`
 
         import React from "react";
         import App, { Container } from "next/app";
@@ -920,10 +948,10 @@
 
         export default withRedux(makeStore)(MyApp);
 
-    Let's add the dispatch in the SearchBar component to give it the ability of change the state.
+  Let's add the dispatch in the SearchBar component to give it the ability of change the state.
 
 
-    `components/searchBar/searchBar`
+  `components/searchBar/searchBar`
 
         import SvgIcon from "components/svgIcon/svgIcon";
         import css from "./searchBar.scss";
@@ -957,9 +985,12 @@
 
         export default connect(state => state)(SearchBar);
 
-    Note that we change from function component to React.Component to prettify a little bit the code and keep the component as a class. Using connect when we are exporting the component the dispatch function is set in the props of the component. That's why in the constructor the dispatch is got from the props. Using dispatch and the action from the `actions` we can alter the state.
+  Note that we change from function component to React.Component to prettify a little bit the code and keep the component as a class. 
+  Using connect when we are exporting the component the dispatch function is set in the props of the component.
+  That's why in the constructor the dispatch is got from the props. Using dispatch and the action from the `actions`
+  we can alter the state.
 
-    Now is time to refactor `pages/dashboard.js`
+  Now is time to refactor `pages/dashboard.js`
 
         import Cta from "components/cta/cta";
         import SearchBar from "components/searchBar/searchBar";
@@ -998,17 +1029,19 @@
 
         export default connect(state => state)(Dashboard);
 
-    Note that now we dont need to pass a function to the searchBar component, we have decoupled it. Now the state of the reducer is in the property `search` and we can filter the list each time the props are updated in the render function.
+  Note that now we dont need to pass a function to the searchBar component, we have decoupled it.
+  Now the state of the reducer is in the property `search` and we can filter the list each time the props are updated
+  in the render function.
 
 
 <span id="#api" >
 7. Create an endpoint:
 
-    We will create an endpoint that will request another api to get Hero info:
+  We will create an endpoint that will request another api to get Hero info:
 
-    The most basic endpoint can be build creating a folder `api` inside `pages`:
+  The most basic endpoint can be build creating a folder `api` inside `pages`:
 
-    `api/getHeroInfo.js`
+  `api/getHeroInfo.js`
 
         export default (req, res) => {z
           res.setHeader('Content-Type', 'application/json')
@@ -1016,11 +1049,11 @@
           res.end(JSON.stringify({ name: 'Nextjs' }))
         }
 
-    Request `http://localhost:3000/api/getHeroInfo`
+  Request `http://localhost:3000/api/getHeroInfo`
 
-    To get additional parameters we can get the query from the request:
+  To get additional parameters we can get the query from the request:
 
-    `api/getHeroInfo.js`
+  `api/getHeroInfo.js`
 
         export default async (req, res) => {
           const {
@@ -1032,20 +1065,20 @@
           res.end(JSON.stringify({ name: 'Nextjs' }))
         }
 
-    Request `http://localhost:3000/api/getHeroInfo?name=Wolverine`
+  Request `http://localhost:3000/api/getHeroInfo?name=Wolverine`
 
-    To get the info of the heroes we will use this api: https://superheroapi.com/
+  To get the info of the heroes we will use this api: https://superheroapi.com/
 
-    Log in with your facebook account and then get the ACCESS_TOKEN:
+  Log in with your facebook account and then get the ACCESS_TOKEN:
 
-    Create a .env file in the root of the project:
+  Create a .env file in the root of the project:
 
-    `.env`
+  `.env`
 
         ACCESS_TOKEN=asdfadgasdg
 
-    `api/getHeroInfo.js`
-    Then, we can use axios to get hero info:
+  `api/getHeroInfo.js`
+  Then, we can use axios to get hero info:
 
         import axios from 'axios';
         require('dotenv').config();
@@ -1065,5 +1098,5 @@
         }
 
 
-    Request `http://localhost:3000/api/getHeroInfo?name=Wolverine`
+  Request `http://localhost:3000/api/getHeroInfo?name=Wolverine`
 
